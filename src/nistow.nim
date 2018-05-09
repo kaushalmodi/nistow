@@ -79,5 +79,13 @@ proc nistow*(version=false, simulate=false, verbose=false, force=false, app: str
 
 when isMainModule:
   import cligen
-  dispatch(nistow,
-           mandatoryOverride = @["version"])
+  # Use dispatchGen to do some initial setup for cligen, but don't run nistow, yet..
+  # The mandatoryOverride option allows the absence of any mandatory switch
+  # (like --app in this case), if the mandatoryOverride switch --version is present.
+  dispatchGen(nistow,
+              mandatoryOverride = @["version"])
+  # If the user has run the binary without any switches, pass the --help switch
+  # automatically to dispatch_nistow.
+  # Else, collect the passed switches using commandLineParams() and pass those to
+  # dispatch_nistow.
+  quit(dispatch_nistow(if paramCount() > 0: commandLineParams() else: @[ "--help" ]))
