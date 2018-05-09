@@ -3,7 +3,7 @@
 # Stow alternative in nim to manage dotfiles.
 
 
-import os, strutils, strformat, parseopt
+import os, strutils, strformat
 type
   LinkInfo = tuple[original:string, dest:string]
 
