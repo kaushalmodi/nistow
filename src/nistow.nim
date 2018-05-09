@@ -40,8 +40,10 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
 
   for linkinfo in linkables:
     let (filepath, linkpath) = linkinfo
-    if verbose:
+    if simulate:
       echo(fmt("Will link {filepath} -> {linkpath}"))
+    elif verbose:
+      echo(fmt("Linking {filepath} -> {linkpath}"))
 
     if not simulate:
       createDir(parentDir(linkpath))
