@@ -55,54 +55,17 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
           if verbose:
             echo(fmt("Skipping linking {filepath} -> {linkpath}"))
 
-
-proc writeHelp() =
-    echo """
-Stow 0.1.0 (Manage your dotfiles easily)
-
-Allowed arguments:
-    -h | --help     : show help
-    -v | --version  : show version
-    --verbose       : verbose messages
-    -s | --simulate : simulate stow operation
-    -f | --force    : override old links
-    -a | --app      : application path to stow
-    -d | --dest     : destination to stow to
-
-    """
 proc writeVersion() =
     echo "Stow version 0.1.0"
 
-
-proc cli*() =
+proc cli*(version=false, simulate=false, verbose=false, force=false, app: string, dest:string) =
   var
     simulate, verbose, force: bool = false
     app, dest: string = ""
 
-  if paramCount() == 0:
-    writeHelp()
-    quit(0)
-
-  for kind, key, val in getopt():
-    case kind
-    of cmdLongOption, cmdShortOption:
-        case key
-        of "help", "h":
-            writeHelp()
-            quit()
-        of "version", "v":
-            writeVersion()
-            quit()
-        of "simulate", "s": simulate = true
-        of "verbose": verbose = true
-        of "force", "f": force = true
-        of "app", "a": app = val
-        of "dest", "d": dest = val
-        else:
-          discard
-    else:
-      discard
-
+  if version:
+    writeVersion()
+    quit()
   if dest.isNilOrEmpty():
     dest = getHomeDir()
   if app.isNilOrEmpty():
@@ -113,5 +76,4 @@ proc cli*() =
   except ValueError:
     echo "Error happened: " & getCurrentExceptionMsg()
 
-when isMainModule:
-  cli()
+when isMainModule: import cligen; dispatch(cli)

@@ -8,4 +8,4 @@ srcDir        = "src"
 bin = @["nistow"]
 # Dependencies
 
-requires "nim >= 0.18.0"
+requires "nim >= 0.18.0", "cligen >= 0.9.10"
