@@ -5,9 +5,9 @@
 
 import os, strutils, strformat
 type
-  LinkInfo = tuple[original:string, dest:string]
+  LinkInfo = tuple[original: string, dest: string]
 
-proc getLinkableFiles*(appPath: string, dest: string=expandTilde("~")): seq[LinkInfo] =
+proc getLinkableFiles(appPath: string, dest: string): seq[LinkInfo] =
 
     # collects the linkable files in a certain app.
 
@@ -18,21 +18,23 @@ proc getLinkableFiles*(appPath: string, dest: string=expandTilde("~")): seq[Link
     #         `-- i3
     #         `-- config
 
-    # dest: destination of the link files : default is the home of user.
+    # dest: destination of the link files
 
   var appPath = expandTilde(appPath)
   if not dirExists(appPath):
     raise newException(ValueError, fmt("App path {appPath} doesn't exist."))
+  var dest = expandTilde(dest)
   var linkables = newSeq[LinkInfo]()
+  # Walk through all files (not symbolic links) recursively in appPath.
   for filepath in walkDirRec(appPath, yieldFilter={pcFile}):
-    let linkpath =  filepath.replace(appPath, dest)
+    let linkpath = filepath.replace(appPath, dest)
         # remove leading /
-    var linkInfo : LinkInfo = (original:filepath, dest:linkpath)
+    var linkInfo : LinkInfo = (original: filepath, dest: linkpath)
     linkables.add(linkInfo)
   return linkables
 
 proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, force: bool=false) =
-    # Creates symoblic links and related directories
+    # Creates symbolic links and related directories
 
     # linkables is a list of tuples (filepath, linkpath) : List[Tuple[file_path, link_path]]
     # simulate does simulation with no effect on the filesystem: bool
