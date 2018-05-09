@@ -58,7 +58,7 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
 proc writeVersion() =
     echo "Stow version 0.1.0"
 
-proc nistow*(version=false, simulate=false, verbose=false, force=false, app="REQUIRED_VALUE", dest="REQUIRED_VALUE") =
+proc nistow*(version=false, simulate=false, verbose=false, force=false, app: string, dest: string) =
   ##Stow 0.1.0 (Manage your dotfiles easily)
 
   var dest_local: string
@@ -67,12 +67,12 @@ proc nistow*(version=false, simulate=false, verbose=false, force=false, app="REQ
     writeVersion()
     quit()
 
-  if dest=="REQUIRED_VALUE":
+  if dest.isNilOrEmpty():
     dest_local = getHomeDir()
   else:
     dest_local = dest
 
-  if app=="REQUIRED_VALUE":
+  if app.isNilOrEmpty():
     echo "Make sure to provide --app flags"
     quit(1)
   try:
@@ -80,4 +80,7 @@ proc nistow*(version=false, simulate=false, verbose=false, force=false, app="REQ
   except ValueError:
     echo "Error happened: " & getCurrentExceptionMsg()
 
-when isMainModule: import cligen; dispatch(nistow)
+when isMainModule:
+  import cligen
+  dispatch(nistow,
+           mandatoryOverride = @["version"])
