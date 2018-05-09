@@ -86,8 +86,7 @@ when isMainModule:
   # (like --app in this case), if the mandatoryOverride switch --version is present.
   dispatchGen(nistow,
               mandatoryOverride = @["version"])
-  # If the user has run the binary without any switches, pass the --help switch
-  # automatically to dispatch_nistow.
-  # Else, collect the passed switches using commandLineParams() and pass those to
-  # dispatch_nistow.
-  quit(dispatch_nistow(if paramCount() > 0: commandLineParams() else: @[ "--help" ]))
+  if paramCount()==0:
+    quit(dispatch_nistow(@["--help"]))
+  else:
+    quit(dispatch_nistow(commandLineParams()))
