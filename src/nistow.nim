@@ -58,22 +58,26 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
 proc writeVersion() =
     echo "Stow version 0.1.0"
 
-proc cli*(version=false, simulate=false, verbose=false, force=false, app: string, dest:string) =
-  var
-    simulate, verbose, force: bool = false
-    app, dest: string = ""
+proc nistow*(version=false, simulate=false, verbose=false, force=false, app: string, dest: string) =
+  ##Stow 0.1.0 (Manage your dotfiles easily)
+
+  var dest_local: string
 
   if version:
     writeVersion()
     quit()
+
   if dest.isNilOrEmpty():
-    dest = getHomeDir()
+    dest_local = getHomeDir()
+  else:
+    dest_local = dest
+
   if app.isNilOrEmpty():
     echo "Make sure to provide --app flags"
     quit(1)
   try:
-    stow(getLinkableFiles(appPath=app, dest=dest), simulate=simulate, verbose=verbose, force=force)
+    stow(getLinkableFiles(appPath=app, dest=dest_local), simulate=simulate, verbose=verbose, force=force)
   except ValueError:
     echo "Error happened: " & getCurrentExceptionMsg()
 
-when isMainModule: import cligen; dispatch(cli)
+when isMainModule: import cligen; dispatch(nistow)
