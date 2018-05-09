@@ -58,7 +58,7 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
 proc writeVersion() =
     echo "Stow version 0.1.0"
 
-proc nistow*(version=false, simulate=false, verbose=false, force=false, app: string, dest: string) =
+proc nistow*(version=false, simulate=false, verbose=false, force=false, app="REQUIRED_VALUE", dest="REQUIRED_VALUE") =
   ##Stow 0.1.0 (Manage your dotfiles easily)
 
   var dest_local: string
@@ -67,12 +67,12 @@ proc nistow*(version=false, simulate=false, verbose=false, force=false, app: str
     writeVersion()
     quit()
 
-  if dest.isNilOrEmpty():
+  if dest=="REQUIRED_VALUE":
     dest_local = getHomeDir()
   else:
     dest_local = dest
 
-  if app.isNilOrEmpty():
+  if app=="REQUIRED_VALUE":
     echo "Make sure to provide --app flags"
     quit(1)
   try:
