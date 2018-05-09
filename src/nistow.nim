@@ -55,7 +55,7 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
           createSymlink(filepath, linkpath)
         else:
           if verbose:
-            echo(fmt("Skipping linking {filepath} -> {linkpath}"))
+            echo(fmt("  Skipping linking as that link already exists."))
 
 proc writeVersion() =
     echo "Stow version 0.1.0"
