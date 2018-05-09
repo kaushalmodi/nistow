@@ -3,9 +3,9 @@
 # Stow alternative in nim to manage dotfiles.
 
 
-import os, strutils, strformat, parseopt2
+import os, strutils, strformat, parseopt
 type
-  LinkInfo = tuple[original:string, dest:string] 
+  LinkInfo = tuple[original:string, dest:string]
 
 proc getLinkableFiles*(appPath: string, dest: string=expandTilde("~")): seq[LinkInfo] =
 
@@ -31,7 +31,7 @@ proc getLinkableFiles*(appPath: string, dest: string=expandTilde("~")): seq[Link
     linkables.add(linkInfo)
   return linkables
 
-proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, force: bool=false) = 
+proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, force: bool=false) =
     # Creates symoblic links and related directories
 
     # linkables is a list of tuples (filepath, linkpath) : List[Tuple[file_path, link_path]]
@@ -56,7 +56,7 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
             echo(fmt("Skipping linking {filepath} -> {linkpath}"))
 
 
-proc writeHelp() = 
+proc writeHelp() =
     echo """
 Stow 0.1.0 (Manage your dotfiles easily)
 
@@ -75,19 +75,19 @@ proc writeVersion() =
 
 
 proc cli*() =
-  var 
+  var
     simulate, verbose, force: bool = false
     app, dest: string = ""
-  
+
   if paramCount() == 0:
     writeHelp()
     quit(0)
-  
+
   for kind, key, val in getopt():
     case kind
     of cmdLongOption, cmdShortOption:
         case key
-        of "help", "h": 
+        of "help", "h":
             writeHelp()
             quit()
         of "version", "v":
@@ -97,11 +97,11 @@ proc cli*() =
         of "verbose": verbose = true
         of "force", "f": force = true
         of "app", "a": app = val
-        of "dest", "d": dest = val 
+        of "dest", "d": dest = val
         else:
           discard
     else:
-      discard 
+      discard
 
   if dest.isNilOrEmpty():
     dest = getHomeDir()
