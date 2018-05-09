@@ -60,22 +60,16 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
 proc writeVersion() =
     echo "Stow version 0.1.0"
 
-proc nistow*(version=false, simulate=false, verbose=false, force=false, app: string, dest="") =
+proc nistow*(version: bool=false, simulate: bool=false, verbose: bool=false, force: bool=false,
+             app: string, dest :string=getHomeDir()) =
   ##Stow 0.1.0 (Manage your dotfiles easily)
-
-  var dest_local: string
 
   if version:
     writeVersion()
     quit()
 
-  if dest.isNilOrEmpty():
-    dest_local = getHomeDir()
-  else:
-    dest_local = dest
-
   try:
-    stow(getLinkableFiles(appPath=app, dest=dest_local), simulate=simulate, verbose=verbose, force=force)
+    stow(getLinkableFiles(appPath=app, dest=dest), simulate=simulate, verbose=verbose, force=force)
   except ValueError:
     echo "Error happened: " & getCurrentExceptionMsg()
 
