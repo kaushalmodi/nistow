@@ -59,16 +59,9 @@ proc stow(linkables: seq[LinkInfo], simulate: bool=true, verbose: bool=true, for
           if verbose:
             echo(fmt("  Skipping linking as that link already exists."))
 
-proc writeVersion() =
-    echo "Stow version 0.1.0"
-
-proc nistow*(version: bool=false, simulate: bool=false, verbose: bool=false, force: bool=false,
+proc nistow*(simulate: bool=false, verbose: bool=false, force: bool=false,
              app: string, dest :string=getHomeDir()) =
-  ##Stow 0.1.0 (Manage your dotfiles easily)
-
-  if version:
-    writeVersion()
-    quit()
+  ##Stow (Manage your dotfiles easily)
 
   try:
     stow(getLinkableFiles(appPath=app, dest=dest), simulate=simulate, verbose=verbose, force=force)
@@ -81,7 +74,7 @@ when isMainModule:
   # The mandatoryOverride option allows the absence of any mandatory switch
   # (like --app in this case), if the mandatoryOverride switch --version is present.
   dispatchGen(nistow,
-              mandatoryOverride = @["version"])
+              version = ("version", "0.1.0"))
   if paramCount()==0:
     quit(dispatch_nistow(@["--help"]))
   else:
