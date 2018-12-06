@@ -70,12 +70,12 @@ proc nistow*(simulate: bool=false, verbose: bool=false, force: bool=false,
 
 when isMainModule:
   import cligen
-  # Use dispatchGen to do some initial setup for cligen, but don't run nistow, yet..
-  # The mandatoryOverride option allows the absence of any mandatory switch
-  # (like --app in this case), if the mandatoryOverride switch --version is present.
-  dispatchGen(nistow,
-              version = ("version", "0.1.0"))
-  if paramCount()==0:
-    quit(dispatch_nistow(@["--help"]))
-  else:
-    quit(dispatch_nistow(commandLineParams()))
+
+  # https://github.com/c-blake/cligen/issues/83#issuecomment-444951772
+  proc mergeParams(cmdNames: seq[string], cmdLine=commandLineParams()): seq[string] =
+    result = cmdLine
+    if cmdLine.len == 0:
+      result = @["--help"]
+
+  dispatch(nistow,
+           version = ("version", "0.1.0"))
